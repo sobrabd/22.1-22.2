@@ -15,6 +15,13 @@ class DogForm(StyleFormMixin, forms.ModelForm):
         model = Dog
         fields = '__all__'
 
+    def clean_birth_day(self):
+        cleaned_data = self.cleaned_data['birth_day']
+        now_year = datetime.datetime.now().year
+        if now_year - cleaned_data.year > 100:
+            raise forms.ValidationError('Собака должна быть моложе 100 лет')
+        return cleaned_data
+
 
 
 class ParentForm(StyleFormMixin, forms.ModelForm):
