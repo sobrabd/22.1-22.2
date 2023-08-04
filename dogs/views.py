@@ -33,7 +33,7 @@ class DogListView(ListView):
         queryset = super().get_queryset()
         queryset.filter(category_id=self.kwargs.get('pk'))
         return queryset
-    
+
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(**kwargs)
         category_item = Category.objects.get(pk=self.kwargs.get('pk'))
@@ -55,7 +55,7 @@ class DogUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('dogs:category_dogs', args=[self.object.category.pk])
-    
+
 
 class DogDeleteView(DeleteView):
     model = Dog
