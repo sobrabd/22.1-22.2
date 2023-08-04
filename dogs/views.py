@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import Category, Dog
 from django.urls import reverse_lazy, reverse
+from .forms import DogForm
 
 
 class IndexView(TemplateView):
@@ -44,7 +45,7 @@ class DogListView(ListView):
 
 class DogCreateView(CreateView):
     model = Dog
-    fields = ('name', 'category')
+    form_class = DogForm
     success_url = reverse_lazy('dogs:categories')
 
 
