@@ -58,7 +58,7 @@ class DogUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('dogs:category_dogs', args=[self.object.category.pk])
-    
+
     def get_context_data(self, **kwargs: Any):
         context_data = super().get_context_data(**kwargs)
         ParentFormSet = inlineformset_factory(Dog, Parent, form=ParentForm, extra=1)
@@ -72,10 +72,12 @@ class DogUpdateView(UpdateView):
     def form_valid(self, form):
         context_data = self.get_context_data()
         formset = context_data['formset']
-        self.object = form.save()
         if formset.is_valid():
+            self.object = form.save()
             formset.instance = self.object
             formset.save()
+        else:
+            return super().form_invalid(form)
         return super().form_valid(form)
 
 class DogDeleteView(DeleteView):
