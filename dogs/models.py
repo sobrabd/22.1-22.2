@@ -34,6 +34,7 @@ class Parent(models.Model):
     name = models.CharField(max_length=250, verbose_name='Кличка')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Порода')
     birth_day = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
+    is_direct_ancestor = models.BooleanField(default=False, verbose_name='прямой предок')
 
     def __str__(self):
         return f'{self.name} ({self.category})'

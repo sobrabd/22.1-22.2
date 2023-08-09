@@ -1,12 +1,15 @@
 from django import forms
 from .models import Dog, Parent
 from datetime import datetime
+from django.forms import BaseInlineFormSet
 
 
 class StyleFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
+            if field_name == 'is_direct_ancestor':
+                continue
             field.widget.attrs['class'] = 'form-control'
 
 
@@ -23,8 +26,20 @@ class DogForm(StyleFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-
 class ParentForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Parent
         fields = '__all__'
+
+
+class ParentFormSet(BaseInlineFormSet):
+
+    def clean(self):
+        super().clean()
+        direct_ancestor_count = 0
+
+        for form in self.forms:
+            if form['is_direct_ancestor'].data:
+                direct_ancestor_count += 1
+                if direct_ancestor_count > 1:
+                    raise forms.ValidationError('Прямой предок может быть только один!')

@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import Category, Dog, Parent
 from django.urls import reverse_lazy, reverse
-from .forms import DogForm, ParentForm
+from .forms import DogForm, ParentForm, ParentFormSet
 from django.forms import inlineformset_factory
 
 
@@ -61,11 +61,13 @@ class DogUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs: Any):
         context_data = super().get_context_data(**kwargs)
-        ParentFormSet = inlineformset_factory(Dog, Parent, form=ParentForm, extra=1)
+        ParentFormSet_ = inlineformset_factory(
+            Dog, Parent, form=ParentForm, formset=ParentFormSet, extra=1
+            )
         if self.request.method == 'POST':
-            formset = ParentFormSet(self.request.POST, instance=self.object)
+            formset = ParentFormSet_(self.request.POST, instance=self.object)
         else:
-            formset = ParentFormSet(instance=self.object)
+            formset = ParentFormSet_(instance=self.object)
         context_data['formset'] = formset
         return context_data
 
