@@ -114,6 +114,7 @@
                             <li><a href="{% url 'users:logout' %}">Выход</a></li>
                             {% else %}
                             <li><a href="{% url 'users:login' %}" {# class="text-white" #}>Вход</a></li>
+                            <li><a href="{% url 'users:register' %}">Регистрация</a></li>
                             {% endif %}
                         </ul>
                     </div>
