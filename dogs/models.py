@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -20,6 +21,8 @@ class Dog(models.Model):
 
     phot = models.ImageField(upload_to='dogs/', null=True, blank=True, verbose_name='Фото')
     birth_day = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='владелец')
 
     def __str__(self):
         return f'{self.name} ({self.category})'
