@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import Category, Dog
 from django.urls import reverse_lazy, reverse
-from .forms import DogForm
+from .forms import DogForm, ParentForm
 
 
 class IndexView(TemplateView):
@@ -55,6 +55,27 @@ class DogUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('dogs:category_dogs', args=[self.object.category.pk])
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        if self.request.method == 'POST':
+            formset = ParentForm(self.request.POST)
+        else:
+            formset = ParentForm(initial={"dog": self.object.pk, "category": self.object.category.id})
+
+        context_data['parent_form'] = formset
+        return context_data
+
+    def form_valid(self, form):
+        context_data = self.get_context_data()
+        parent_form = context_data['parent_form']
+        self.object = form.save()
+        if parent_form.is_valid():
+            parent_form.product = self.object
+            parent_form.save()
+
+        return super().form_valid(form)
 
 
 class DogDeleteView(DeleteView):
